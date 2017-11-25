@@ -1,0 +1,493 @@
+#ifdef __cplusplus
+    #include <cstdlib>
+#else
+    #include <stdlib.h>
+#endif
+
+#include <SDL/SDL.h>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+//----------------------------FORWARD-----------------------------------
+int Init();
+void Events();
+void Draw();
+void DrawPixel(SDL_Surface *screen, int x, int y, Uint8 R, Uint8 G, Uint8 B);
+void DrawPixel4(int X, int Y, Uint8 R, Uint8 G, Uint8 B);
+void DrawXLine(int X, int Y, int X1, Uint8 R, Uint8 G, Uint8 B);
+void DrawYLine(int X, int Y, int Y1, Uint8 R, Uint8 G, Uint8 B);
+void DrawMatrix8(char cMatrix[][8],int X, int Y);
+void DrawMatrix16(char cMatrix[][16],int X, int Y);
+void DrawMatrix32(char cMatrix[][32],int X, int Y);
+void DrawSym(int lang, char sym,int x, int y);
+
+//--------------------------VARIABLES-----------------------------------
+SDL_Surface* screen;
+SDL_Event event;
+bool done = false;
+
+//----------------------------CLASSES-----------------------------------
+
+class Player{
+	private:
+		int X;
+		int Y;
+		int mode;
+		char cMode0[32][32] = {
+			{'s','s','s','G','G','G','G','s','s','s','s'},
+			{'s','s','G','G','G','G','G','G','s','s','s'},
+			{'s','s','G','G','G','G','G','G','s','s','s'},
+			{'s','G','G','W','W','W','W','G','G','s','s'},
+			{'s','G','W','W','W','W','W','W','G','s','s'},
+			{'s','G','W','W','W','W','W','W','G','s','s'},
+			{'s','W','W','W','r','r','W','W','W','s','s'},
+			{'s','W','W','W','r','r','W','W','W','s','s'},
+			{'s','W','W','W','r','r','W','W','W','s','s'},
+			{'s','b','W','W','W','W','W','W','b','s','s'},
+			{'s','s','W','W','W','W','W','W','s','s','s'},
+			{'s','s','s','W','W','W','W','s','s','s','s'},
+			{'s','s','b','s','s','s','s','b','s','s','s'},
+			{'s','b','s','s','s','s','s','s','b','s','s'},
+			{'s','b','s','s','s','s','s','s','b','s','s'},
+			{'s','b','s','s','s','s','s','s','b','s','s'}}; //Ну вот так, как-то)
+	public:
+		Player()
+		{
+			mode = 0;
+		}
+		
+		~Player(){}
+		
+		void SetPostion(int x, int y)
+		{
+			X = x;
+			Y = y;
+		}
+		
+		void SetMode(int Mode)
+		{
+			mode = Mode;
+		}
+		
+		void Draw()
+		{
+			if (mode == 0)
+			{
+				DrawPixel4(X+1,Y,255,255,255);
+				DrawPixel4(X+4,Y,255,255,255);
+				
+				DrawPixel4(X+2,Y+2,255,255,255);
+				DrawPixel4(X+3,Y+2,255,255,255);
+				
+				DrawPixel4(X+1,Y+3,255,255,255);
+				DrawPixel4(X+4,Y+3,255,255,255);
+			} 
+			else if (mode == 1)
+			{
+				DrawXLine(X+2,Y,X+5,100,100,100);
+				DrawXLine(X+2,Y+1,X+5,100,100,100);
+				DrawXLine(X+2,Y+2,X+5,100,100,100);
+				
+				DrawYLine(X+1,Y+1,Y+3,50,50,50);
+				DrawYLine(X+6,Y+1,Y+3,50,50,50);
+				
+				DrawYLine(X,Y+3,Y+5,50,50,50);
+				DrawYLine(X+7,Y+3,Y+5,50,50,50);
+				
+				DrawXLine(X+2,Y+3,X+5,255,255,255);
+				DrawXLine(X+1,Y+4,X+6,255,255,255);
+				DrawXLine(X+1,Y+5,X+6,255,255,255);
+				
+				DrawXLine(X,Y+6,X+7,255,255,255);
+				
+				DrawXLine(X,Y+7,X+2,255,255,255);
+				DrawXLine(X+3,Y+7,X+4,0,0,0);
+				DrawXLine(X+5,Y+7,X+7,255,255,255);
+				
+				DrawXLine(X,Y+8,X+2,255,255,255);
+				DrawXLine(X+3,Y+8,X+4,0,0,0);
+				DrawXLine(X+5,Y+8,X+7,255,255,255);
+				
+				DrawXLine(X,Y+9,X+2,255,255,255);
+				DrawXLine(X+3,Y+9,X+4,0,0,0);
+				DrawXLine(X+5,Y+9,X+7,255,255,255);
+				
+				DrawXLine(X,Y+10,X+7,255,255,255);
+				
+				DrawXLine(X+1,Y+11,X+6,255,255,255);
+				DrawXLine(X+1,Y+12,X+6,255,255,255);
+				
+				DrawXLine(X+2,Y+13,X+5,255,255,255);
+				
+				DrawPixel4(X+1,Y+13,00,00,170);
+				DrawPixel4(X,Y+14,00,00,170);
+				DrawPixel4(X-1,Y+15,00,00,170);
+				DrawYLine(X-1,Y+16,Y+18,00,00,170);
+
+				DrawPixel4(X+6,Y+13,00,00,170);
+				DrawPixel4(X+7,Y+14,00,00,170);
+				DrawPixel4(X+8,Y+15,00,00,170);
+				DrawYLine(X+8,Y+16,Y+18,00,00,170);
+				
+
+				DrawYLine(X-1,Y+10,Y+12,00,00,100);
+				
+				DrawYLine(X+8,Y+10,Y+12,00,00,100);
+
+			}
+			else if (mode == 2)
+			{
+				DrawXLine(X+2,Y,X+5,100,100,100);
+				DrawXLine(X+2,Y+1,X+5,100,100,100);
+				DrawXLine(X+2,Y+2,X+5,100,100,100);
+				
+				DrawYLine(X+1,Y+1,Y+3,50,50,50);
+				DrawYLine(X+6,Y+1,Y+3,50,50,50);
+				
+				DrawYLine(X,Y+3,Y+5,50,50,50);
+				DrawYLine(X+7,Y+3,Y+5,50,50,50);
+				
+				DrawXLine(X+2,Y+3,X+5,255,255,255);
+				DrawXLine(X+1,Y+4,X+6,255,255,255);
+				DrawXLine(X+1,Y+5,X+6,255,255,255);
+				
+				DrawXLine(X,Y+6,X+7,255,255,255);
+				
+				DrawXLine(X,Y+7,X+2,255,255,255);
+				DrawXLine(X+3,Y+7,X+4,255,0,0);
+				DrawXLine(X+5,Y+7,X+7,255,255,255);
+				
+				DrawXLine(X,Y+8,X+2,255,255,255);
+				DrawXLine(X+3,Y+8,X+4,255,0,0);
+				DrawXLine(X+5,Y+8,X+7,255,255,255);
+				
+				DrawXLine(X,Y+9,X+2,255,255,255);
+				DrawXLine(X+3,Y+9,X+4,255,0,0);
+				DrawXLine(X+5,Y+9,X+7,255,255,255);
+				
+				DrawXLine(X,Y+10,X+7,255,255,255);
+				
+				DrawXLine(X+1,Y+11,X+6,255,255,255);
+				DrawXLine(X+1,Y+12,X+6,255,255,255);
+				
+				DrawXLine(X+2,Y+13,X+5,255,255,255);
+				
+				DrawPixel4(X+1,Y+13,00,00,170);
+				DrawPixel4(X,Y+14,00,00,170);
+				DrawPixel4(X-1,Y+15,00,00,170);
+				DrawYLine(X-1,Y+16,Y+18,00,00,170);
+
+				DrawPixel4(X+6,Y+13,00,00,170);
+				DrawPixel4(X+7,Y+14,00,00,170);
+				DrawPixel4(X+8,Y+15,00,00,170);
+				DrawYLine(X+8,Y+16,Y+18,00,00,170);
+				
+
+				DrawYLine(X-1,Y+10,Y+12,00,00,100);
+				
+				DrawYLine(X+8,Y+10,Y+12,00,00,100);
+
+			}
+			else if (mode == 3)
+			{
+				DrawMatrix32(cMode0,10,10);
+			}
+		}
+};
+
+
+//----------------------------OBJECTS-----------------------------------
+Player megu;
+
+//----------------------------DEFS--------------------------------------
+void DrawPixel(SDL_Surface *screen, int x, int y, Uint8 R, Uint8 G, Uint8 B){ 
+ Uint32 color = SDL_MapRGB(screen->format, R, G, B); 
+ switch (screen->format->BytesPerPixel){ 
+   case 1:  // Assuming 8-bpp 
+   { 
+     Uint8 *bufp; 
+     bufp = (Uint8 *)screen->pixels + y*screen->pitch + x; *bufp = color; 
+   } break; 
+   case 2: // Probably 15-bpp or 16-bpp 
+   { 
+     Uint16 *bufp; 
+     bufp = (Uint16 *)screen->pixels + y*screen->pitch/2 + x; *bufp = color; 
+   } break; 
+   case 3: // Slow 24-bpp mode, usually not used 
+   { 
+     Uint8 *bufp; 
+     bufp = (Uint8 *)screen->pixels + y*screen->pitch + x * 3; 
+     if(SDL_BYTEORDER == SDL_LIL_ENDIAN){ 
+       bufp[0] = color; 
+       bufp[1] = color >> 8; 
+       bufp[2] = color >> 16; 
+     }else{ 
+       bufp[2] = color; 
+       bufp[1] = color >> 8; 
+       bufp[0] = color >> 16; 
+     } 
+   } break; 
+   case 4: // Probably 32-bpp 
+   { 
+     Uint32 *bufp; 
+     bufp = (Uint32 *)screen->pixels + y*screen->pitch/4 + x; 
+     *bufp = color; 
+   } break; 
+ } 
+}
+
+void DrawPixel4(int X, int Y, Uint8 R, Uint8 G, Uint8 B){
+	int x = X*2;
+	int y = Y*2;
+	DrawPixel(screen, x,y, R,G,B);
+	DrawPixel(screen, x+1,y, R,G,B);
+	DrawPixel(screen, x,y+1, R,G,B);
+	DrawPixel(screen, x+1,y+1, R,G,B);
+}
+
+void DrawMatrix8(char cMatrix[][8],int X, int Y){
+	char cRead;
+	int w = 8;
+	int h = 8;
+	for (int y=0;y<h;y++){
+		for (int x=0;x<=w;x++){
+			cRead = cMatrix[y][x];
+			if (cRead=='s'){}
+			else if(cRead=='r'){
+				DrawPixel4(X+x, Y+y, 255, 0, 0);
+			}
+			else if(cRead=='g'){
+				DrawPixel4(X+x, Y+y, 0, 255, 0);
+			}
+			else if(cRead=='b'){
+				DrawPixel4(X+x, Y+y, 0, 0, 255);
+			}
+			else if(cRead=='W'){
+				DrawPixel4(X+x, Y+y, 255, 255, 255);
+			}
+			else if(cRead=='B'){
+				DrawPixel4(X+x, Y+y, 0, 0, 0);
+			}
+			else if(cRead=='G'){
+				DrawPixel4(X+x, Y+y, 100, 100, 100);
+			}
+		}
+	}
+}
+
+void DrawMatrix16(char cMatrix[][16],int X, int Y){
+	char cRead;
+	int w = 16;
+	int h = 16;
+	for (int y=0;y<=h;y++){
+		for (int x=0;x<=w;x++){
+			cRead = cMatrix[y][x];
+			if (cRead=='s'){}
+			else if(cRead=='r'){
+				DrawPixel4(X+x, Y+y, 255, 0, 0);
+			}
+			else if(cRead=='g'){
+				DrawPixel4(X+x, Y+y, 0, 255, 0);
+			}
+			else if(cRead=='b'){
+				DrawPixel4(X+x, Y+y, 0, 0, 255);
+			}
+			else if(cRead=='W'){
+				DrawPixel4(X+x, Y+y, 255, 255, 255);
+			}
+			else if(cRead=='B'){
+				DrawPixel4(X+x, Y+y, 0, 0, 0);
+			}
+			else if(cRead=='G'){
+				DrawPixel4(X+x, Y+y, 100, 100, 100);
+			}
+		}
+	}
+}
+
+void DrawMatrix32(char cMatrix[][32],int X, int Y){
+	char cRead;
+	int w = 32;
+	int h = 32;
+	for (int y=0;y<=h;y++){
+		for (int x=0;x<=w;x++){
+			cRead = cMatrix[y][x];
+			if (cRead=='s'){}
+			else if(cRead=='r'){
+				DrawPixel4(X+x, Y+y, 255, 0, 0);
+			}
+			else if(cRead=='g'){
+				DrawPixel4(X+x, Y+y, 0, 255, 0);
+			}
+			else if(cRead=='b'){
+				DrawPixel4(X+x, Y+y, 0, 0, 255);
+			}
+			else if(cRead=='W'){
+				DrawPixel4(X+x, Y+y, 255, 255, 255);
+			}
+			else if(cRead=='B'){
+				DrawPixel4(X+x, Y+y, 0, 0, 0);
+			}
+			else if(cRead=='G'){
+				DrawPixel4(X+x, Y+y, 100, 100, 100);
+			}
+		}
+	}
+}
+
+void DrawXLine(int X, int Y, int X1, Uint8 R, Uint8 G, Uint8 B){
+	for (int i = X;i<=X1;i++){
+		DrawPixel4(i,Y, R,G,B);
+	}
+}
+
+void DrawYLine(int X, int Y, int Y1, Uint8 R, Uint8 G, Uint8 B){
+	for (int i = Y;i<=Y1;i++){
+		DrawPixel4(X,i, R,G,B);
+	}
+}
+
+void DrawSym(int lang, char sym,int x, int y){
+	if (lang==0){
+		switch(sym){
+			case 'A':{char cSym[8][8]={
+						{'s','s','s','W','s','s','s','s'},
+						{'s','s','W','s','W','s','s','s'},
+						{'s','s','W','s','W','s','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','W','W','W','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;
+			case 'B':{char cSym[8][8]={
+						{'s','W','W','W','W','s','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','W','W','s','s','s'},
+						{'s','W','s','W','W','s','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','W','W','W','s','s','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;
+			case 'C':{char cSym[8][8]={
+						{'s','s','s','W','W','s','s','s'},
+						{'s','s','W','s','s','W','s','s'},
+						{'s','W','s','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s','s'},
+						{'s','s','W','s','s','W','s','s'},
+						{'s','s','s','W','W','s','s','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;
+			case 'D':{char cSym[8][8]={
+						{'s','W','W','W','s','s','s'},
+						{'s','W','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s'},
+						{'s','W','s','s','s','W','s'},
+						{'s','W','s','s','s','W','s'},
+						{'s','W','s','s','s','W','s'},
+						{'s','W','s','s','W','s','s'},
+						{'s','W','W','W','s','s','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;
+			case 'E':{char cSym[8][8]={
+						{'s','W','W','W','W','W','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','W','W','W','W','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','W','W','W','W','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;
+			case 'F':{char cSym[8][8]={
+						{'s','W','W','W','W','W','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','W','W','W','W','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;
+			/*case 'B':{char cSym[8][8]={
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'}};
+				DrawMatrix8(cSym,x,y);
+			} break;*/
+		}
+	}
+}
+
+int Init(){
+    SDL_Init( SDL_INIT_VIDEO);
+    atexit(SDL_Quit);
+    screen = SDL_SetVideoMode(500, 350, 16,SDL_HWSURFACE|SDL_DOUBLEBUF);
+    return 0;
+}
+
+//----------------------------GAME--------------------------------------
+int main ( int argc, char** argv ){
+	Init();
+	
+	megu.SetMode(2);
+	megu.SetPostion(248/2,173/2);
+	
+    
+    while (!done)
+    {
+        Events();
+        Draw();
+    } 
+    return 0;
+}
+
+void Events(){
+    while (SDL_PollEvent(&event))
+    {
+       switch (event.type)
+       {
+          case SDL_QUIT:
+              done = true;
+              break;
+          case SDL_KEYDOWN:
+          {
+              if (event.key.keysym.sym == SDLK_ESCAPE)
+                  done = true;
+                  break;
+          }
+       } 
+    }
+}
+
+void Draw(){
+    SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, 0, 0, 0));
+	{
+		//megu.Draw();
+		DrawPixel(screen,10,10,255,255,255);
+		
+		DrawPixel4(15,15,255,255,255);
+		//DrawSym(0,'A',5,5);
+		//DrawSym(0,'B',5+7,5);
+		//DrawSym(0,'C',5+14,5);
+		//DrawSym(0,'D',5+21,5);
+		//DrawSym(0,'E',5+28,5);
+		//DrawSym(0,'F',5+35,5);
+	}
+    SDL_Flip(screen);
+}
+

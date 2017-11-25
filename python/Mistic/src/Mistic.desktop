@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Mistic Tower
+Exec=python3 /home/nikita/workspace/py/Mistic/src/main.py
+Type=Application
+Path=/home/nikita/workspace/py/Mistic/src
+Icon=/home/nikita/workspace/py/Mistic/src/ico.png
+Categories=Game;RolePlaying;ActionGame;
