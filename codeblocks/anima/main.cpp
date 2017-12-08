@@ -97,6 +97,9 @@ class NImage{
             x = 0;
             y = 0;
         };
+        ~NImage(){
+            SDL_FreeSurface(bmp);
+        }
         NImage(char dir[]){
             x = 0;
             y = 0;
@@ -299,6 +302,9 @@ class MMenu{
             ModeButton0.Position(190,592);
             ModeButton0.Transparent();
         };
+        ~MMenu(){
+
+        }
         void Draw(){
             Background.Draw();
             Panel0.Draw();
@@ -319,6 +325,8 @@ class MMenu{
                 DrawWord(1,"Jlbyjxyfz buhf",57,600,cWHITE);
             else
                 DrawWord(1,"Jlbyjxyfz buhf",57,600,cBLACK);
+
+            DrawWord(1,"Fkmaf dth. 0.0.1",240,735,cBLACK);
         };
         void Mouse(int X, int Y){
             x = X;
@@ -327,6 +335,12 @@ class MMenu{
                 nSelected = 0;
             else
                 nSelected = -1;
+        };
+        void MouseDown(){
+            if (nSelected == 0){
+                Room = 1;
+                delete this;
+            }
         };
         void KeyDown(int nKey){
 
@@ -342,11 +356,37 @@ class Pause{
 
 class WorldAnalisator{
     private:
-
+        int mx;
+        int my;
     public:
+        WorldAnalisator(){
+            mx = 0;
+            my = 0;
+        };
+        ~WorldAnalisator(){
 
+        };
+        void Draw(){
+
+        };
+        void Mouse(int X, int Y){
+            mx = X;
+            my = Y;
+        };
+        void MouseDown(){
+
+        };
+        void MouseUp(){
+
+        };
+        void KeyDown(int key){
+
+        }
+        void KeyUp(int key){
+
+        }
 };
-
+WorldAnalisator worlda;
 
 MMenu menu;
 //----------------------------DEFS--------------------------------------
@@ -1786,14 +1826,14 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case 'F':{char cSym[8][8]={
-						{'s','W','W','W','W','W','s'},
-						{'s','W','s','s','s','s','s'},
-						{'s','W','s','s','s','s','s'},
-						{'s','W','W','W','W','W','s'},
-						{'s','W','s','s','s','s','s'},
-						{'s','W','s','s','s','s','s'},
-						{'s','W','s','s','s','s','s'},
-						{'s','W','s','s','s','s','s'}};
+						{'s','s','s','W','s','s','s','s'},
+						{'s','s','W','s','W','s','s','s'},
+						{'s','s','W','s','W','s','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','W','W','W','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'}};
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case 'G':{char cSym[8][8]={
@@ -2032,13 +2072,13 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 			} break;
 			case 'a':{char cSym[8][8]={
 						{'s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','W','W','W','s','s','s'},
-						{'s','s','s','s','W','s','s'},
+						{'s','s','s','W','s','s','s'},
 						{'s','s','W','W','W','s','s'},
-						{'s','W','s','s','W','s','s'},
-						{'s','W','s','s','W','s','s'},
-						{'s','s','W','W','s','W','s'}};
+						{'s','W','s','W','s','W','s'},
+						{'s','W','s','W','s','W','s'},
+						{'s','s','W','W','W','s','s'},
+						{'s','s','s','W','s','s','s'},
+						{'s','s','s','W','s','s','s'}};
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case 'b':{char cSym[8][8]={
@@ -2689,8 +2729,7 @@ int main ( int argc, char** argv ){
 
     //Инициализация
     {
-        nn.GenPer();
-        nn.Position(100,100);
+
     }
 
     while (!done)
@@ -2720,6 +2759,19 @@ void Events(){
                 if (Room == 0){
                     menu.Mouse(event.motion.x, event.motion.y);
                 }
+                else if (Room == 1){
+                    worlda.Mouse(event.motion.x, event.motion.y);
+                }
+                break;
+            }
+          case SDL_MOUSEBUTTONDOWN:
+            {
+                if (Room == 0){
+                    menu.MouseDown();
+                }
+                else if (Room == 1){
+                    worlda.MouseDown();
+                }
                 break;
             }
        }
@@ -2729,9 +2781,12 @@ void Events(){
 void Draw(){
     SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, 0, 100, 200));
 	{
-        //nn.Motion(ADOWN);
-        //DrawWord(1,"Ghbdtn? rfr ltkf&&&",10,10,cWHITE);
-        menu.Draw();
+        if (Room == 0){
+            menu.Draw();
+        }
+        else if (Room == 1){
+            worlda.Draw();
+        }
 	}
     SDL_Flip(screen);
 }
