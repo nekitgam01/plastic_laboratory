@@ -38,6 +38,8 @@ void MainMenu();
 SDL_Surface* screen;
 SDL_Event event;
 bool done = false;
+int Room = 0;
+
 const int ADOWN = 0;
 const int ALEFT = 1;
 const int AUP = 2;
@@ -278,8 +280,14 @@ class MMenu{
         NImage Panel0;
         NImage Button0;
         NImage ModeButton0;
+        int nSelected;
+        int x;
+        int y;
     public:
         MMenu(){
+            x = 0;
+            y = 0;
+            nSelected = -1;
             Background.LoadBmp("data/interface/background.bmp");
             Panel0.LoadBmp("data/interface/normal_panel.bmp");
             Panel0.Position(6,570);
@@ -294,12 +302,31 @@ class MMenu{
         void Draw(){
             Background.Draw();
             Panel0.Draw();
+
+            if (nSelected!=0){
+                Button0.LoadBmp("data/interface/normal_button.bmp");
+                Button0.Position(20,592);
+                Button0.Transparent();
+            } else {
+                Button0.LoadBmp("data/interface/normal_button_on.bmp");
+                Button0.Position(20,592);
+                Button0.Transparent();
+            }
             Button0.Draw();
+
             ModeButton0.Draw();
-            DrawWord(1,"Jlbyjxyfz buhf",57,600,cWHITE);
+            if (nSelected!=0)
+                DrawWord(1,"Jlbyjxyfz buhf",57,600,cWHITE);
+            else
+                DrawWord(1,"Jlbyjxyfz buhf",57,600,cBLACK);
         };
         void Mouse(int X, int Y){
-
+            x = X;
+            y = Y;
+            if (((x>=20) and (y>=592)) and ((x<=184) and (y<=617)))
+                nSelected = 0;
+            else
+                nSelected = -1;
         };
         void KeyDown(int nKey){
 
@@ -2688,6 +2715,13 @@ void Events(){
                   done = true;
                   break;
           }
+          case SDL_MOUSEMOTION:
+            {
+                if (Room == 0){
+                    menu.Mouse(event.motion.x, event.motion.y);
+                }
+                break;
+            }
        }
     }
 }
