@@ -40,6 +40,7 @@ SDL_Event event;
 bool done = false;
 int Room = 0;
 
+//--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
 const int ALEFT = 1;
 const int AUP = 2;
@@ -48,7 +49,7 @@ const int ASTOPDOWN = 4;
 const int ASTOPLEFT = 5;
 const int ASTOPUP = 6;
 const int ASTOPRIGHT = 7;
-//--------------------------CONSTANTS-----------------------------------
+
 const char cCLEAR = 's';
 const char cWHITE = 'W';
 const char cBLACK = 'B';
@@ -98,7 +99,7 @@ class NImage{
             y = 0;
         };
         ~NImage(){
-            SDL_FreeSurface(bmp);
+            //SDL_FreeSurface(bmp);
         }
         NImage(char dir[]){
             x = 0;
@@ -145,6 +146,10 @@ class NImage{
             dstrect.y = y;
             SDL_BlitSurface(bmp, 0, prnt, &dstrect);
         }
+        //void Destroy(){
+        //    SDL_FreeSurface(bmp);
+        //   delete this;
+        //}
 };
 
 class NPersonage{
@@ -339,12 +344,15 @@ class MMenu{
         void MouseDown(){
             if (nSelected == 0){
                 Room = 1;
-                delete this;
+                this->Destroy();
             }
         };
         void KeyDown(int nKey){
 
         };
+        void Destroy(){
+            delete this;
+        }
 };
 
 class Pause{
@@ -358,16 +366,24 @@ class WorldAnalisator{
     private:
         int mx;
         int my;
+        int px;
+        int py;
+        NImage wrender[4]; //Рендер 4 сторон видимых частей
     public:
         WorldAnalisator(){
             mx = 0;
             my = 0;
+            px = 0;
+            py = 0;
+            wrender[0].LoadBmp("data/world/w0.bmp");
         };
         ~WorldAnalisator(){
 
         };
         void Draw(){
-
+            px++;
+            py++;
+            wrender[0].Draw(px,py);
         };
         void Mouse(int X, int Y){
             mx = X;
@@ -384,6 +400,9 @@ class WorldAnalisator{
         }
         void KeyUp(int key){
 
+        }
+        void Destroy(){
+            delete this;
         }
 };
 WorldAnalisator worlda;
@@ -2750,7 +2769,7 @@ void Events(){
               break;
           case SDL_KEYDOWN:
           {
-              if (event.key.keysym.sym == SDLK_ESCAPE)
+              if (event.key.keysym.sym == SDLK_F12)
                   done = true;
                   break;
           }
