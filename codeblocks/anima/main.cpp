@@ -41,7 +41,7 @@ SDL_Surface* screen;
 SDL_Event event;
 bool done = false;
 int Room = 0;
-int nScreenSize = 1; //1024x768
+int nScreenSize = 2; //1024x768
 
 //--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
@@ -369,7 +369,13 @@ class MMenu{
             else if (Room == 99){
                 if (nScreenSize==1){ //1024x768
                     Panel1.Draw(306,210);
-
+                    Button0.Draw(314,220);
+                    if (nScreenSize==1){
+                        DrawWord(1,"Hfphtitybt^ 1024[768",323,230,cWHITE);
+                    }
+                    if (nScreenSize==2){
+                        DrawWord(1,"Hfphtitybt^ 1366[768",323,230,cWHITE);
+                    }
                 }
 
                 DrawWord(1,"Dckexft ghj,ktv c yfcnhjqrfvb? lkz c,hjcf dctulf hf,jnftn ryjgrf",10,758,cRED);
@@ -2238,12 +2244,12 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 			case 'i':{char cSym[8][8]={
 						{'s','s','s','s','s','s','s'},
 						{'s','s','s','s','s','s','s'},
-						{'s','s','s','W','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','s','s','W','s','s','s'},
-						{'s','s','s','W','s','s','s'},
-						{'s','s','s','W','s','s','s'},
-						{'s','s','s','W','s','s','s'}};
+						{'s','W','s','W','s','W','s'},
+						{'s','W','s','W','s','W','s'},
+						{'s','W','s','W','s','W','s'},
+						{'s','W','s','W','s','W','s'},
+						{'s','W','s','W','s','W','s'},
+						{'s','W','W','W','W','W','s'}};
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case 'j':{char cSym[8][8]={
@@ -2595,13 +2601,13 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case '^':{char cSym[8][8]={
-						{'s','s','s','s','W','s','s','s'},
-						{'s','s','s','W','s','W','s','s'},
-						{'s','s','W','s','s','s','W','s'},
+						{'s','s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s','s'},
+						{'s','s','s','W','s','s','s','s'},
 						{'s','s','s','s','s','s','s','s'},
 						{'s','s','s','s','s','s','s','s'},
 						{'s','s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s','s'},
+						{'s','s','s','W','s','s','s','s'},
 						{'s','s','s','s','s','s','s','s'}};
 
 				DrawMatrixDeColor(cSym,x,y,'W',color);
@@ -2642,14 +2648,14 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case '[':{char cSym[8][8]={
-						{'s','s','W','W','W','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','s','W','W','W','s','s'}};
+						{'s','s','s','s','s','s','s'},
+						{'s','s','s','s','s','s','s'},
+						{'s','W','s','s','s','W','s'},
+						{'s','s','W','s','W','s','s'},
+						{'s','s','s','W','s','s','s'},
+						{'s','s','s','W','s','s','s'},
+						{'s','s','W','s','W','s','s'},
+						{'s','W','s','s','s','W','s'}};
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case ']':{char cSym[8][8]={
@@ -2807,7 +2813,12 @@ char* LoadData(char dir[], char data[]){
 int Init(){
     SDL_Init( SDL_INIT_VIDEO);
     atexit(SDL_Quit);
-    screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+    if (nScreenSize == 1){
+        screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+    }
+    else if (nScreenSize == 2){
+        screen = SDL_SetVideoMode(1366, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+    }
     SDL_WM_SetCaption("Anima","Anima");
     return 0;
 }
