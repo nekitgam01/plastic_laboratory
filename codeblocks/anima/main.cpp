@@ -34,11 +34,14 @@ void MatrixDeColor(char cMatrix[][8], char cFColor ,char NColor);
 void DrawSym(int lang, char sym,int x, int y, char color);
 void DrawWord(int lang, char* szText,int X, int Y, char color);
 void MainMenu();
+void SaveData(char dir[], char data[]);
+char* LoadData(char dir[], char data[]);
 //--------------------------VARIABLES-----------------------------------
 SDL_Surface* screen;
 SDL_Event event;
 bool done = false;
 int Room = 0;
+int nScreenSize = 1; //1024x768
 
 //--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
@@ -286,7 +289,9 @@ class MMenu{
     private:
         NImage Background;
         NImage Panel0;
+        NImage Panel1;
         NImage Button0;
+        NImage Button1;
         NImage ModeButton0;
         int nSelected;
         int x;
@@ -297,12 +302,22 @@ class MMenu{
             y = 0;
             nSelected = -1;
             Background.LoadBmp("data/interface/background.bmp");
+
             Panel0.LoadBmp("data/interface/normal_panel.bmp");
             Panel0.Position(6,570);
             Panel0.Transparent();
+
+            Panel1.LoadBmp("data/interface/mid_panel.bmp");
+            Panel1.Position(6,570);
+            Panel1.Transparent();
+
             Button0.LoadBmp("data/interface/normal_button.bmp");
             Button0.Position(20,592);
             Button0.Transparent();
+
+            Button1.LoadBmp("data/interface/normal_button.bmp");
+            Button1.Transparent();
+
             ModeButton0.LoadBmp("data/interface/mode_button0.bmp");
             ModeButton0.Position(190,592);
             ModeButton0.Transparent();
@@ -312,38 +327,76 @@ class MMenu{
         }
         void Draw(){
             Background.Draw();
-            Panel0.Draw();
+            if (Room == 0) {
+                Panel0.Draw();
 
-            if (nSelected!=0){
-                Button0.LoadBmp("data/interface/normal_button.bmp");
-                Button0.Position(20,592);
-                Button0.Transparent();
-            } else {
-                Button0.LoadBmp("data/interface/normal_button_on.bmp");
-                Button0.Position(20,592);
-                Button0.Transparent();
+                if (nSelected!=0){
+                    Button0.LoadBmp("data/interface/normal_button.bmp");
+                    Button0.Position(20,592);
+                    Button0.Transparent();
+                } else if (nSelected==0) {
+                    Button0.LoadBmp("data/interface/normal_button_on.bmp");
+                    Button0.Position(20,592);
+                    Button0.Transparent();
+                }
+                Button0.Draw();
+
+                if (nSelected!=1){
+                    Button1.LoadBmp("data/interface/normal_button.bmp");
+                    Button1.Position(20,628);
+                    Button1.Transparent();
+                } else if (nSelected==1) {
+                    Button1.LoadBmp("data/interface/normal_button_on.bmp");
+                    Button1.Position(20,628);
+                    Button1.Transparent();
+                }
+                Button1.Draw();
+
+                ModeButton0.Draw();
+
+                if (nSelected!=0)
+                    DrawWord(1,"Jlbyjxyfz buhf",57,600,cWHITE);
+                else if (nSelected==0)
+                    DrawWord(1,"Jlbyjxyfz buhf",57,600,cBLACK);
+
+                if (nSelected!=1)
+                    DrawWord(1,"Yfcnhjqrb",67,636,cWHITE);
+                else if (nSelected==1)
+                    DrawWord(1,"Yfcnhjqrb",67,636,cBLACK);
+
+                DrawWord(1,"Fkmaf dth. 0.0.1",240,735,cBLACK);
             }
-            Button0.Draw();
+            else if (Room == 99){
+                if (nScreenSize==1){ //1024x768
+                    Panel1.Draw(306,210);
 
-            ModeButton0.Draw();
-            if (nSelected!=0)
-                DrawWord(1,"Jlbyjxyfz buhf",57,600,cWHITE);
-            else
-                DrawWord(1,"Jlbyjxyfz buhf",57,600,cBLACK);
+                }
 
-            DrawWord(1,"Fkmaf dth. 0.0.1",240,735,cBLACK);
+                DrawWord(1,"Dckexft ghj,ktv c yfcnhjqrfvb? lkz c,hjcf dctulf hf,jnftn ryjgrf",10,758,cRED);
+                DrawWord(0,"[F11]",464,758,cRED);
+            }
         };
+
         void Mouse(int X, int Y){
             x = X;
             y = Y;
-            if (((x>=20) and (y>=592)) and ((x<=184) and (y<=617)))
-                nSelected = 0;
-            else
-                nSelected = -1;
+            if (Room == 0){
+                if (((x>=20) and (y>=592)) and ((x<=184) and (y<=617)))
+                    nSelected = 0;
+                else if (((x>=20) and (y>=628)) and ((x<=184) and (y<=655)))
+                    nSelected = 1;
+                else
+                    nSelected = -1;
+            }
+            else if (Room == 99){
+
+            }
         };
         void MouseDown(){
             if (nSelected == 0){
                 Room = 1;
+            } else if (nSelected == 1){
+                Room = 99;
             }
         };
         void KeyDown(int nKey){
@@ -381,8 +434,12 @@ class WorldAnalisator{
         };
         void Draw(){
             //px++;
-            py++;
+            //py++;
             wrender[0].Draw(px,py);
+        };
+
+        void Operate(){
+
         };
         void Mouse(int X, int Y){
             mx = X;
@@ -2069,11 +2126,11 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 						{'s','W','s','s','s','W','s','s'},
 						{'s','W','s','s','s','W','s','s'},
 						{'s','W','s','s','s','W','s','s'},
-						{'s','s','W','s','W','s','s','s'},
-						{'s','s','s','W','s','s','s','s'},
-						{'s','s','s','W','s','s','s','s'},
-						{'s','s','s','W','s','s','s','s'},
-						{'s','s','s','W','s','s','s','s'}};
+						{'s','W','W','W','W','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'}};
 
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
@@ -2450,13 +2507,13 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 			} break;
 			case ',':{char cSym[8][8]={
 						{'s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','s','s','s','s','s','s'},
-						{'s','s','W','s','s','s','s'},
-						{'s','W','s','s','s','s','s'}};
+						{'s','s','W','W','W','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','s','s','s','s','s'},
+						{'s','W','W','W','s','s','s'},
+						{'s','W','s','s','W','s','s'},
+						{'s','W','s','s','W','s','s'},
+						{'s','s','W','W','s','s','s'}};
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case '/':{char cSym[8][8]={
@@ -2734,6 +2791,19 @@ void DrawPixel4(int X, int Y, Uint8 R, Uint8 G, Uint8 B){
 	DrawPixel(screen, x,y, R,G,B);
 }
 
+void SaveData(char dir[], char data[]){
+    ofstream fout;
+    fout << data << endl;
+    fout.close();
+}
+
+char* LoadData(char dir[], char data[]){
+    ifstream fin;
+    char lData[256];
+    fin.getline(lData,256);
+    return lData;
+}
+
 int Init(){
     SDL_Init( SDL_INIT_VIDEO);
     atexit(SDL_Quit);
@@ -2799,13 +2869,12 @@ void Events(){
 void Draw(){
     SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, 0, 100, 200));
 	{
-        if (Room == 0){
+        if ((Room == 0) || (Room == 99)){
             menu.Draw();
         }
         else if (Room == 1){
             worlda.Draw();
         }
-        DrawWord(1,"Z Gksde",10,10,cORANGE);
 	}
     SDL_Flip(screen);
 }
