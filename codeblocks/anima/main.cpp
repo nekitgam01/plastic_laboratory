@@ -42,7 +42,6 @@ SDL_Event event;
 bool done = false;
 int Room = 0;
 int nScreenSize = 2; //1024x768
-
 //--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
 const int ALEFT = 1;
