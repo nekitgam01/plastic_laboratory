@@ -344,7 +344,6 @@ class MMenu{
         void MouseDown(){
             if (nSelected == 0){
                 Room = 1;
-                this->Destroy();
             }
         };
         void KeyDown(int nKey){
@@ -381,7 +380,7 @@ class WorldAnalisator{
 
         };
         void Draw(){
-            px++;
+            //px++;
             py++;
             wrender[0].Draw(px,py);
         };
@@ -2079,14 +2078,14 @@ void DrawSym(int lang, char sym,int x, int y, char color){
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case 'Z':{char cSym[8][8]={
-						{'s','W','W','W','W','W','W','s'},
-						{'s','s','s','s','s','s','W','s'},
-						{'s','s','s','s','s','W','s','s'},
-						{'s','s','s','s','W','s','s','s'},
-						{'s','s','s','W','s','s','s','s'},
-						{'s','s','W','s','s','s','s','s'},
-						{'s','W','s','s','s','s','s','s'},
-						{'s','W','W','W','W','W','W','s'}};
+						{'s','s','W','W','W','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','s','s','S','W','s','s'},
+						{'s','s','W','W','W','W','s','s'},
+						{'s','s','W','s','s','W','s','s'},
+						{'s','W','s','s','s','W','s','s'},
+						{'s','W','S','S','S','W','W','s'}};
 				DrawMatrixDeColor(cSym,x,y,'W',color);
 			} break;
 			case 'a':{char cSym[8][8]={
@@ -2806,6 +2805,7 @@ void Draw(){
         else if (Room == 1){
             worlda.Draw();
         }
+        DrawWord(1,"Z Gksde",10,10,cORANGE);
 	}
     SDL_Flip(screen);
 }
