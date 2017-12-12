@@ -41,7 +41,7 @@ SDL_Surface* screen;
 SDL_Event event;
 bool done = false;
 int Room = 0;
-int nScreenSize = 1; //1024x768
+int nScreenSize = 2; //1024x768
 //--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
 const int ALEFT = 1;
@@ -300,7 +300,13 @@ class MMenu{
             x = 0;
             y = 0;
             nSelected = -1;
-            Background.LoadBmp("data/interface/background.bmp");
+            if (nScreenSize == 1){
+                Background.LoadBmp("data/interface/background.bmp");
+            } 
+            else if (nScreenSize == 2){
+                Background.LoadBmp("data/interface/background1366.bmp");
+            } 
+
 
             Panel0.LoadBmp("data/interface/normal_panel.bmp");
             Panel0.Position(6,570);
@@ -369,13 +375,13 @@ class MMenu{
                 if (nScreenSize==1){ //1024x768
                     Panel1.Draw(306,210);
                     Button0.Draw(314,220);
-                    if (nScreenSize==1){
-                        DrawWord(1,"Hfphtitybt^ 1024[768",323,230,cWHITE);
-                    }
-                    if (nScreenSize==2){
-                        DrawWord(1,"Hfphtitybt^ 1366[768",323,230,cWHITE);
-                    }
+                    DrawWord(1,"Hfphtitybt^ 1024[768",323,230,cWHITE);
                 }
+		else if (nScreenSize==2){
+		    Panel1.Draw(506,210);
+		    Button0.Draw(514,220);
+                    DrawWord(1,"Hfphtitybt^ 1366[768",523,230,cWHITE);
+		}
 
                 DrawWord(1,"Dckexft ghj,ktv c yfcnhjqrfvb? lkz c,hjcf dctulf hf,jnftn ryjgrf",10,758,cRED);
                 DrawWord(0,"[F11]",464,758,cRED);
