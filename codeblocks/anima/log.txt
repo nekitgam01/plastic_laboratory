@@ -1,0 +1,8 @@
+
+C:\Users\Любовь\plastic_laboratory\codeblocks\anima>mingw32-g++.exe -Wall -O2 -IC:\Users\╦■сют№\plastic_laboratory\LIBS\SDL-1.2.15\include -c main.cpp -o obj\main.o 
+
+C:\Users\Любовь\plastic_laboratory\codeblocks\anima>mingw32-g++.exe -LC:\Users\╦■сют№\plastic_laboratory\LIBS\SDL-1.2.15\lib -o main.exe obj\main.o  -s  -lmingw32 -lSDLmain -lSDL.dll -luser32 -lgdi32 -lwinmm -ldxguid 
+
+C:\Users\Любовь\plastic_laboratory\codeblocks\anima>mingw32-g++.exe -Wall -O2 -IC:\Users\╦■сют№\plastic_laboratory\LIBS\SDL-1.2.15\include -c main.cpp -o obj\main.o  1>>log.txt 
+
+C:\Users\Любовь\plastic_laboratory\codeblocks\anima>mingw32-g++.exe -LC:\Users\╦■сют№\plastic_laboratory\LIBS\SDL-1.2.15\lib -o main.exe obj\main.o  -s  -lmingw32 -lSDLmain -lSDL.dll -luser32 -lgdi32 -lwinmm -ldxguid  1>>log.txt 
