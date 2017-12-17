@@ -35,14 +35,15 @@ void DrawSym(int lang, char sym,int x, int y, char color);
 void DrawWord(int lang, char* szText,int X, int Y, char color);
 void MainMenu();
 void SaveData(char dir[], char data[]);
-char* LoadData(char dir[], char data[]);
+void SaveData(char dir[], int data);
+char* LoadData(char dir[]);
 int SetScreenSize(int nSize);
 //--------------------------VARIABLES-----------------------------------
 SDL_Surface* screen;
 SDL_Event event;
 bool done = false;
 int Room = 0;
-int nScreenSize = 1; //1024x768
+int nScreenSize = 0; //1024x768
 //--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
 const int ALEFT = 1;
@@ -301,13 +302,6 @@ class MMenu{
             x = 0;
             y = 0;
             nSelected = -1;
-            if (nScreenSize == 1){
-                Background.LoadBmp("data/interface/background.bmp");
-            }
-            else if (nScreenSize == 2){
-                Background.LoadBmp("data/interface/background1366.bmp");
-            }
-
 
             Panel0.LoadBmp("data/interface/normal_panel.bmp");
             Panel0.Position(6,570);
@@ -332,6 +326,12 @@ class MMenu{
 
         }
         void Draw(){
+            if (nScreenSize == 1){
+                Background.LoadBmp("data/interface/background.bmp");
+            }
+            else if (nScreenSize == 4){
+                Background.LoadBmp("data/interface/background1366.bmp");
+            }
             Background.Draw();
             if (Room == 0) {
                 Panel0.Draw();
@@ -378,10 +378,10 @@ class MMenu{
                     Button0.Draw(314,220);
                     DrawWord(1,"Hfphtitybt^ 1024[768",323,230,cWHITE);
                 }
-            else if (nScreenSize==4){
-                Panel1.Draw(506,210);
-                Button0.Draw(514,220);
-                    DrawWord(1,"Hfphtitybt^ 1366[768",523,230,cWHITE);
+                else if (nScreenSize==4){
+                    Panel1.Draw(506,210);
+                    Button0.Draw(514,220);
+                        DrawWord(1,"Hfphtitybt^ 1366[768",523,230,cWHITE);
                 }
 
                 DrawWord(1,"Dckexft ghj,ktv c yfcnhjqrfvb? lkz c,hjcf dctulf hf,jnftn ryjgrf",10,758,cRED);
@@ -2805,33 +2805,67 @@ void DrawPixel4(int X, int Y, Uint8 R, Uint8 G, Uint8 B){
 
 void SaveData(char dir[], char data[]){
     ofstream fout;
+    fout.open(dir);
     fout << data << endl;
     fout.close();
 }
 
-char* LoadData(char dir[], char data[]){
+void SaveData(char dir[], int data){
+    ofstream fout;
+    fout.open(dir);
+    fout << data << endl;
+    fout.close();
+}
+
+char* LoadData(char dir[]){
     ifstream fin;
+    fin.open(dir);
     char lData[256];
     fin.getline(lData,256);
     return lData;
 }
 
+
 int SetScreenSize(int nSize){
     nScreenSize = nSize;
-    if (nScreenSize == 0){
-        screen = SDL_SetVideoMode(800, 480, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+    ifstream fin;
+    fin.open("data/settings.cfg");
+    char lData[256];
+    fin.getline(lData,256);
+    fin.getline(lData,256);
+    if (lData[6]=='1'){
+        if (nScreenSize == 0){
+            screen = SDL_SetVideoMode(800, 480, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+        }
+        else if (nScreenSize == 1){
+            screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+        }
+        else if (nScreenSize == 2){
+            screen = SDL_SetVideoMode(960, 540, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+        }
+        else if (nScreenSize == 3){
+            screen = SDL_SetVideoMode(1280, 720, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+        }
+        else if (nScreenSize == 4){
+            screen = SDL_SetVideoMode(1366, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+        }
     }
-    else if (nScreenSize == 1){
-        screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
-    }
-    else if (nScreenSize == 2){
-        screen = SDL_SetVideoMode(960, 540, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
-    }
-    else if (nScreenSize == 3){
-        screen = SDL_SetVideoMode(1280, 720, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
-    }
-    else if (nScreenSize == 4){
-        screen = SDL_SetVideoMode(1366, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+    else {
+        if (nScreenSize == 0){
+            screen = SDL_SetVideoMode(800, 480, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
+        }
+        else if (nScreenSize == 1){
+            screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
+        }
+        else if (nScreenSize == 2){
+            screen = SDL_SetVideoMode(960, 540, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
+        }
+        else if (nScreenSize == 3){
+            screen = SDL_SetVideoMode(1280, 720, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
+        }
+        else if (nScreenSize == 4){
+            screen = SDL_SetVideoMode(1366, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
+        }
     }
     if (!screen){
         return 1;
@@ -2840,6 +2874,24 @@ int SetScreenSize(int nSize){
 }
 
 int Init(){
+    char* sSyze;
+    sSyze = LoadData("data/settings.cfg");
+    SaveData("data/settingslog.cfg",strlen(sSyze));
+    if (sSyze[6]=='1'){
+            nScreenSize = 1;
+    }
+    else if (sSyze[6]=='0'){
+            nScreenSize = 0;
+    }
+    else if (sSyze[6]=='2'){
+            nScreenSize = 2;
+    }
+    else if (sSyze[6]=='3'){
+            nScreenSize = 3;
+    }
+    else if (sSyze[6]=='4'){
+            nScreenSize = 4;
+    }
     SDL_Init( SDL_INIT_VIDEO);
     atexit(SDL_Quit);
     SetScreenSize(nScreenSize);
