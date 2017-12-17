@@ -43,7 +43,7 @@ SDL_Surface* screen;
 SDL_Event event;
 bool done = false;
 int Room = 0;
-int nScreenSize = 0; //1024x768
+int nScreenSize = 1; //1024x768
 //--------------------------CONSTANTS-----------------------------------
 const int ADOWN = 0;
 const int ALEFT = 1;
@@ -307,6 +307,7 @@ class MMenu{
             Panel0.Position(6,570);
             Panel0.Transparent();
 
+			
             Panel1.LoadBmp("data/interface/mid_panel.bmp");
             Panel1.Position(6,570);
             Panel1.Transparent();
@@ -321,12 +322,16 @@ class MMenu{
             ModeButton0.LoadBmp("data/interface/mode_button0.bmp");
             ModeButton0.Position(190,592);
             ModeButton0.Transparent();
+            
         };
         ~MMenu(){
 
         }
         void Draw(){
-            if (nScreenSize == 1){
+			if (nScreenSize == 0){
+                Background.LoadBmp("data/interface/background800.bmp");
+            }
+            else if (nScreenSize == 1){
                 Background.LoadBmp("data/interface/background.bmp");
             }
             else if (nScreenSize == 4){
@@ -2835,7 +2840,7 @@ int SetScreenSize(int nSize){
     fin.getline(lData,256);
     if (lData[6]=='1'){
         if (nScreenSize == 0){
-            screen = SDL_SetVideoMode(800, 480, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+            screen = SDL_SetVideoMode(800, 600, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
         }
         else if (nScreenSize == 1){
             screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
@@ -2852,7 +2857,7 @@ int SetScreenSize(int nSize){
     }
     else {
         if (nScreenSize == 0){
-            screen = SDL_SetVideoMode(800, 480, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
+            screen = SDL_SetVideoMode(800, 600, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
         }
         else if (nScreenSize == 1){
             screen = SDL_SetVideoMode(1024, 768, 24,SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -2874,22 +2879,23 @@ int SetScreenSize(int nSize){
 }
 
 int Init(){
-    char* sSyze;
-    sSyze = LoadData("data/settings.cfg");
-    SaveData("data/settingslog.cfg",strlen(sSyze));
-    if (sSyze[6]=='1'){
+    ifstream fin;
+    fin.open("data/settings.cfg");
+    char sSize[256];
+    fin.getline(sSize,256);
+    if (sSize[6]=='1'){
             nScreenSize = 1;
     }
-    else if (sSyze[6]=='0'){
+    else if (sSize[6]=='0'){
             nScreenSize = 0;
     }
-    else if (sSyze[6]=='2'){
+    else if (sSize[6]=='2'){
             nScreenSize = 2;
     }
-    else if (sSyze[6]=='3'){
+    else if (sSize[6]=='3'){
             nScreenSize = 3;
     }
-    else if (sSyze[6]=='4'){
+    else if (sSize[6]=='4'){
             nScreenSize = 4;
     }
     SDL_Init( SDL_INIT_VIDEO);
