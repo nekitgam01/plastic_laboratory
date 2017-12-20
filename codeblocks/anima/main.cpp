@@ -257,6 +257,7 @@ class MMenu{
             x = 0;
             y = 0;
             nSelected = -1;
+            
 
             Panel0.LoadBmp("data/interface/normal_panel.bmp");
             Panel0.Position(6,570);
@@ -300,77 +301,137 @@ class MMenu{
                 Background = BackgroundsMips[4];
             }
             Background.Draw();
-            if (Room == 0) {
-                Panel0.Draw();
+						//Room MAIN MENU
+						if (Room == 0) {
+							//if screensize 800x600
+							if (nScreenSize == 0){
+								//panel menu
+								Panel0.Position(6,410);
+								Panel0.Draw();
+								//Button Start Load Sprite
+								if (nSelected!=0){
+										Button0 = ButtonTextures[0];
+										Button0.Position(20,432);
+										Button0.Transparent();
+								} else if (nSelected==0) {
+										Button0 = ButtonTextures[1];
+										Button0.Position(20,432);
+										Button0.Transparent();
+								}
+								Button0.Draw();
+								
+								//Button Settings Load Sprite
+								if (nSelected!=1){
+										Button1 = ButtonTextures[0];
+										Button1.Position(20,468);
+										Button1.Transparent();
+								} else if (nSelected==1) {
+										Button1 = ButtonTextures[1];
+										Button1.Position(20,468);
+										Button1.Transparent();
+								}
+								Button1.Draw();
 
-                if (nSelected!=0){
-                    Button0 = ButtonTextures[0];
-                    Button0.Position(20,592);
-                    Button0.Transparent();
-                } else if (nSelected==0) {
-                    Button0 = ButtonTextures[1];
-                    Button0.Position(20,592);
-                    Button0.Transparent();
-                }
-                Button0.Draw();
+								//Mode Button Position
+								ModeButton0.Position(190,432);
+								ModeButton0.Draw();
+								
+								//Fonts matrix draw in buttons 
+								if (nSelected!=0)
+										DrawWord(screen,1,"Jlbyjxyfz buhf",57,440,cWHITE);
+								else if (nSelected==0)
+										DrawWord(screen,1,"Jlbyjxyfz buhf",57,440,cBLACK);
 
-                if (nSelected!=1){
-                    Button1 = ButtonTextures[0];
-                    Button1.Position(20,628);
-                    Button1.Transparent();
-                } else if (nSelected==1) {
-                    Button1 = ButtonTextures[1];
-                    Button1.Position(20,628);
-                    Button1.Transparent();
-                }
-                Button1.Draw();
+								if (nSelected!=1)
+										DrawWord(screen,1,"Yfcnhjqrb",67,476,cWHITE);
+								else if (nSelected==1)
+										DrawWord(screen,1,"Yfcnhjqrb",67,476,cBLACK);
 
-                ModeButton0.Draw();
+								DrawWord(screen,1,"Fkmaf dth. 0.0.1",240,575,cBLACK);
+							}
+							//if screensize more (>) 800x600
+							else if (nScreenSize >= 1){
+								Panel0.Draw();
 
-                if (nSelected!=0)
-                    DrawWord(screen,1,"Jlbyjxyfz buhf",57,600,cWHITE);
-                else if (nSelected==0)
-                    DrawWord(screen,1,"Jlbyjxyfz buhf",57,600,cBLACK);
+								if (nSelected!=0){
+										Button0 = ButtonTextures[0];
+										Button0.Position(20,592);
+										Button0.Transparent();
+								} else if (nSelected==0) {
+										Button0 = ButtonTextures[1];
+										Button0.Position(20,592);
+										Button0.Transparent();
+								}
+								Button0.Draw();
 
-                if (nSelected!=1)
-                    DrawWord(screen,1,"Yfcnhjqrb",67,636,cWHITE);
-                else if (nSelected==1)
-                    DrawWord(screen,1,"Yfcnhjqrb",67,636,cBLACK);
+								if (nSelected!=1){
+										Button1 = ButtonTextures[0];
+										Button1.Position(20,628);
+										Button1.Transparent();
+								} else if (nSelected==1) {
+										Button1 = ButtonTextures[1];
+										Button1.Position(20,628);
+										Button1.Transparent();
+								}
+								Button1.Draw();
 
-                DrawWord(screen,1,"Fkmaf dth. 0.0.1",240,735,cBLACK);
-            }
-            else if (Room == 99){
-                if (nScreenSize==1){ //1024x768
-                    Panel1.Draw(306,210);
-                    Button0.Draw(314,220);
-                    DrawWord(screen,1,"Hfphtitybt^ 1024[768",323,230,cWHITE);
-                }
-                else if (nScreenSize==4){
-                    Panel1.Draw(506,210);
-                    Button0.Draw(514,220);
-                        DrawWord(screen,1,"Hfphtitybt^ 1366[768",523,230,cWHITE);
-                }
+								ModeButton0.Draw();
 
-                DrawWord(screen,1,"Dckexft ghj,ktv c yfcnhjqrfvb? lkz c,hjcf dctulf hf,jnftn ryjgrf",10,758,cRED);
-                DrawWord(screen,0,"[F11]",464,758,cRED);
-            }
-        };
+								if (nSelected!=0)
+										DrawWord(screen,1,"Jlbyjxyfz buhf",57,600,cWHITE);
+								else if (nSelected==0)
+										DrawWord(screen,1,"Jlbyjxyfz buhf",57,600,cBLACK);
 
-        void Mouse(int X, int Y){
-            x = X;
-            y = Y;
-            if (Room == 0){
-                if (((x>=20) and (y>=592)) and ((x<=184) and (y<=617)))
-                    nSelected = 0;
-                else if (((x>=20) and (y>=628)) and ((x<=184) and (y<=655)))
-                    nSelected = 1;
-                else
-                    nSelected = -1;
-            }
-            else if (Room == 99){
+								if (nSelected!=1)
+										DrawWord(screen,1,"Yfcnhjqrb",67,636,cWHITE);
+								else if (nSelected==1)
+										DrawWord(screen,1,"Yfcnhjqrb",67,636,cBLACK);
 
-            }
-        };
+								DrawWord(screen,1,"Fkmaf dth. 0.0.1",240,735,cBLACK);
+							}
+						}
+						else if (Room == 99){
+								if (nScreenSize==1){ //1024x768
+										Panel1.Draw(306,210);
+										Button0.Draw(314,220);
+										DrawWord(screen,1,"Hfphtitybt^ 1024[768",323,230,cWHITE);
+								}
+								else if (nScreenSize==4){
+										Panel1.Draw(506,210);
+										Button0.Draw(514,220);
+												DrawWord(screen,1,"Hfphtitybt^ 1366[768",523,230,cWHITE);
+								}
+
+								DrawWord(screen,1,"Dckexft ghj,ktv c yfcnhjqrfvb? lkz c,hjcf dctulf hf,jnftn ryjgrf",10,758,cRED);
+								DrawWord(screen,0,"[F11]",464,758,cRED);
+						}
+				};
+
+				void Mouse(int X, int Y){
+						x = X;
+						y = Y;
+						if (Room == 0){
+							if (nScreenSize == 0){
+									if (((x>=20) and (y>=432)) and ((x<=184) and (y<=457)))
+										nSelected = 0;
+								else if (((x>=20) and (y>=469)) and ((x<=184) and (y<=494)))
+										nSelected = 1;
+								else
+										nSelected = -1;
+								}
+							else{
+								if (((x>=20) and (y>=592)) and ((x<=184) and (y<=617)))
+										nSelected = 0;
+								else if (((x>=20) and (y>=628)) and ((x<=184) and (y<=655)))
+										nSelected = 1;
+								else
+										nSelected = -1;
+							}
+						}
+						else if (Room == 99){
+
+						}
+				};
         void MouseDown(){
             if (nSelected == 0){
                 Room = 1;
