@@ -242,6 +242,8 @@ NPersonage nn;
 class MMenu{
     private:
         NImage Background;
+        NImage BackgroundsMips[5];
+        NImage ButtonTextures[2];
         NImage Panel0;
         NImage Panel1;
         NImage Button0;
@@ -259,17 +261,24 @@ class MMenu{
             Panel0.LoadBmp("data/interface/normal_panel.bmp");
             Panel0.Position(6,570);
             Panel0.Transparent();
+            
+            BackgroundsMips[0].LoadBmp("data/interface/background800.bmp");
+            BackgroundsMips[1].LoadBmp("data/interface/background.bmp");
+            BackgroundsMips[4].LoadBmp("data/interface/background1366.bmp");
 
 
             Panel1.LoadBmp("data/interface/mid_panel.bmp");
             Panel1.Position(6,570);
             Panel1.Transparent();
+            
+            ButtonTextures[0].LoadBmp("data/interface/normal_button.bmp");
+            ButtonTextures[1].LoadBmp("data/interface/normal_button_on.bmp");
 
-            Button0.LoadBmp("data/interface/normal_button.bmp");
+            Button0 = ButtonTextures[0];
             Button0.Position(20,592);
             Button0.Transparent();
 
-            Button1.LoadBmp("data/interface/normal_button.bmp");
+            Button1 = ButtonTextures[0];
             Button1.Transparent();
 
             ModeButton0.LoadBmp("data/interface/mode_button0.bmp");
@@ -282,35 +291,35 @@ class MMenu{
         }
         void Draw(){
 			if (nScreenSize == 0){
-                Background.LoadBmp("data/interface/background800.bmp");
+                Background = BackgroundsMips[0];
             }
             else if (nScreenSize == 1){
-                Background.LoadBmp("data/interface/background.bmp");
+                Background = BackgroundsMips[1];
             }
             else if (nScreenSize == 4){
-                Background.LoadBmp("data/interface/background1366.bmp");
+                Background = BackgroundsMips[4];
             }
             Background.Draw();
             if (Room == 0) {
                 Panel0.Draw();
 
                 if (nSelected!=0){
-                    Button0.LoadBmp("data/interface/normal_button.bmp");
+                    Button0 = ButtonTextures[0];
                     Button0.Position(20,592);
                     Button0.Transparent();
                 } else if (nSelected==0) {
-                    Button0.LoadBmp("data/interface/normal_button_on.bmp");
+                    Button0 = ButtonTextures[1];
                     Button0.Position(20,592);
                     Button0.Transparent();
                 }
                 Button0.Draw();
 
                 if (nSelected!=1){
-                    Button1.LoadBmp("data/interface/normal_button.bmp");
+                    Button1 = ButtonTextures[0];
                     Button1.Position(20,628);
                     Button1.Transparent();
                 } else if (nSelected==1) {
-                    Button1.LoadBmp("data/interface/normal_button_on.bmp");
+                    Button1 = ButtonTextures[1];
                     Button1.Position(20,628);
                     Button1.Transparent();
                 }
