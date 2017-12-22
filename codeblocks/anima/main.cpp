@@ -474,6 +474,8 @@ class WorldAnalisator{
 			my = 0;
 			px = 0;
 			py = 0;
+			nn.Position(100,100);
+			nn.GenPer();
 			
 			LoadPoligone("data/world/p0x0.pl");
 			char sReader;
@@ -481,12 +483,18 @@ class WorldAnalisator{
 				for (int i = 0;i<64;i++){
 					sReader = polLevel0[i][j];
 					if (sReader == '0'){
-						level0[i][j].LoadBmp("data/world/terra0.bmp");
+						level0[j][i].LoadBmp("data/world/terra0.bmp");
 					}
 					else if (sReader == '1'){
-						level0[i][j].LoadBmp("data/world/terragrass0.bmp");
+						level0[j][i].LoadBmp("data/world/terragrass0.bmp");
 					}
 				}
+			}
+			if (nScreenSize==0){
+				nn.Position(394,297);
+			}
+			if (nScreenSize==1){
+				nn.Position(500,350);
 			}
 		};
 		~WorldAnalisator(){
@@ -494,12 +502,14 @@ class WorldAnalisator{
 		};
 		void Draw(){
 			//px++;
-			//py++;
+			
 			for (int i = 0;i<64;i++){
 				for (int j = 0;j<64;j++){
 					level0[i][j].Draw(px+(i*35),py+(j*35));
 				}
 			}
+			nn.Draw(ADOWN);
+			py--;
 		};
 		
 		void LoadPoligone(char dir[]){
@@ -655,6 +665,7 @@ int main ( int argc, char** argv ){
 }
 
 void Events(){
+	SDL_EnableKeyRepeat(1,1);
 	while (SDL_PollEvent(&event))
 	{
 	   switch (event.type)
@@ -666,12 +677,16 @@ void Events(){
 		  {
 			if (event.key.keysym.sym == SDLK_F12)
 				done = true;
-			break;
 			//If opened room Settings
 			if (Room == 99){
 				if (event.key.keysym.sym == SDLK_k)
 					menu.KeyDown(98);
 			}
+			if (Room == 1){
+				if (event.key.keysym.sym == SDLK_s)
+					worlda.KeyDown(ADOWN);
+			}
+			break;
 		  }
 		  case SDL_MOUSEMOTION:
 			{
